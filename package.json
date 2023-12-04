@@ -1,0 +1,10 @@
+{
+    "name": "advent-of-code-2023",
+    "version": "1.0.0",
+    "devDependencies": {
+        "prettier": "^3.1.0"
+    },
+    "scripts": {
+        "format": "prettier . --write"
+    }
+}
