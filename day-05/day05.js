@@ -66,10 +66,7 @@ const partOne = (seeds, mappings) =>
 const partTwo = (seeds, allMappings) =>
     seedsToRanges(seeds)
         .map((seedRange) =>
-            allMappings.reduce(
-                (ranges, mappings) => nextRanges(ranges, mappings),
-                [seedRange],
-            ),
+            allMappings.reduce((ranges, mappings) => nextRanges(ranges, mappings), [seedRange]),
         )
         .flat()
         .reduce((lowest, { start }) => Math.min(lowest ?? start, start), null);

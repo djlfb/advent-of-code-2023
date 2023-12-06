@@ -42,6 +42,10 @@ const parseNumbers = (str, delim = /\s+/) =>
         .split(delim)
         .map((chr) => Number(chr));
 
+const _quadratic = (a, b, c, positive = true) =>
+    (b + (positive ? 1 : -1) * Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+const quadratic = (a, b, c) => [_quadratic(a, b, c, false), _quadratic(a, b, c)];
+
 const time = (fn) => {
     const start = Date.now();
     return [fn(), Date.now() - start];
@@ -61,6 +65,7 @@ module.exports = {
     isNumber,
     newArray,
     parseNumbers,
+    quadratic,
     readLines,
     reverseStr,
     reduce,
