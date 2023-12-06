@@ -41,25 +41,19 @@ const nextRangesToCheck = (ranges, mappings) => {
         while (ranges.length) {
             const { start, end } = ranges.pop();
 
-            intersectionRanges.push(
-                ...[
-                    {
-                        start: Math.max(start, sourceStart) - sourceStart + destinationStart,
-                        end: Math.min(sourceEnd, end) - sourceStart + destinationStart,
-                    },
-                ].filter(hasNonEmptyInterval),
-            );
+            intersectionRanges.push({
+                start: Math.max(start, sourceStart) - sourceStart + destinationStart,
+                end: Math.min(sourceEnd, end) - sourceStart + destinationStart,
+            });
 
             differenceRanges.push(
-                ...[
-                    { start, end: Math.min(sourceStart, end) },
-                    { start: Math.max(sourceEnd, start), end },
-                ].filter(hasNonEmptyInterval),
+                { start, end: Math.min(sourceStart, end) },
+                { start: Math.max(sourceEnd, start), end },
             );
         }
-        ranges = differenceRanges;
+        ranges = differenceRanges.filter(hasNonEmptyInterval);
     }
-    return ranges.concat(intersectionRanges);
+    return ranges.concat(intersectionRanges.filter(hasNonEmptyInterval));
 };
 
 const partOne = (seeds, mappings) =>
