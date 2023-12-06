@@ -34,7 +34,7 @@ const nextValue = (value, rangeMapping) =>
         .filter((mapping) => value >= mapping.sourceStart && value < mapping.sourceEnd)
         .map((mapping) => mapping.destinationStart + (value - mapping.sourceStart))[0] ?? value;
 
-const nextRangesToCheck = (ranges, mappings) => {
+const nextRanges = (ranges, mappings) => {
     const intersectionRanges = [];
     for (const { sourceStart, sourceEnd, destinationStart } of mappings) {
         const differenceRanges = [];
@@ -67,7 +67,7 @@ const partTwo = (seeds, allMappings) =>
     seedsToRanges(seeds)
         .map((seedRange) =>
             allMappings.reduce(
-                (ranges, mappings) => nextRangesToCheck(ranges, mappings),
+                (ranges, mappings) => nextRanges(ranges, mappings),
                 [seedRange],
             ),
         )
