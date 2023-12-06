@@ -1,5 +1,4 @@
 const { readFileSync } = require('fs');
-const assert = require('assert');
 
 const readLines = (map = (line) => line, path = './input.txt') => {
     const file = readFileSync(path);
