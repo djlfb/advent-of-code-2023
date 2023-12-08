@@ -31,12 +31,10 @@ const mapHands = (lines) => lines.map(mapHand);
 
 const handTypeRank = (cardCounts) => {
     const mostOccurring = cardCounts[0];
-    if (mostOccurring === 1) {
-        return 1;
-    } else if (mostOccurring === 2) {
-        return cardCounts[1] === 1 ? 2 : 3;
+    if ([1, 2].includes(mostOccurring)) {
+        return mostOccurring + cardCounts[1] - 1;
     } else if (mostOccurring === 3) {
-        return cardCounts[1] === 1 ? 4 : 5;
+        return mostOccurring + cardCounts[1];
     }
     return mostOccurring + 2;
 };

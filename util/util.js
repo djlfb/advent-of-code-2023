@@ -46,6 +46,11 @@ const _quadratic = (a, b, c, positive = true) =>
     (-b + (positive ? 1 : -1) * Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
 const quadratic = (a, b, c) => [_quadratic(a, b, c, false), _quadratic(a, b, c)];
 
+const gcd = (x, y) => (!y ? x : gcd(y, x % y));
+
+const _lcm = (x, y) => (x * y) / gcd(x, y);
+const lcm = (values) => values.reduce((a, b) => _lcm(a, b), 1);
+
 const time = (fn) => {
     const start = Date.now();
     return [fn(), Date.now() - start];
@@ -60,9 +65,11 @@ const report = (part, fn, expected) => {
 };
 
 module.exports = {
+    gcd,
     hasIntersection,
     intersection,
     isNumber,
+    lcm,
     newArray,
     parseNumbers,
     quadratic,
