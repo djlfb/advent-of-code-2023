@@ -56,13 +56,20 @@ const time = (fn) => {
     return [fn(), Date.now() - start];
 };
 
-const report = (part, fn, expected) => {
-    const [res, timeTaken] = time(fn);
-    if (expected && res !== expected) {
-        throw Error(`Expected ${expected} but result was ${res}`);
+const checkAndLog = (part, result, expected, timeTaken) => {
+    if (expected && result !== expected) {
+        throw Error(`Expected ${expected} but result was ${result}`);
     }
-    console.log(`Part ${part}: ${res} - ${timeTaken}ms`);
+    console.log(`Part ${part}: ${result} - ${timeTaken}ms`);
 };
+
+const report = (part, fn, expected) => {
+    const [result, timeTaken] = time(fn);
+    checkAndLog(part, result, expected, timeTaken);
+};
+
+const reportAll = (parts, timeTaken) =>
+    parts.forEach(({ expected, result }, idx) => checkAndLog(idx + 1, result, expected, timeTaken));
 
 module.exports = {
     gcd,
@@ -77,6 +84,7 @@ module.exports = {
     reverseStr,
     reduce,
     report,
+    reportAll,
     stringify,
     time,
 };
