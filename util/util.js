@@ -1,6 +1,6 @@
 const { readFileSync } = require('fs');
 
-const readLines = (map = (line) => line, path = './input.txt') => {
+const readLines = (map = (line) => line, path = './input.txt', filterBlank = true) => {
     const file = readFileSync(path);
     return file
         .toString()
@@ -11,7 +11,16 @@ const readLines = (map = (line) => line, path = './input.txt') => {
 
 const reverseStr = (str) => str.split('').reverse().join('');
 
-const newArray = (length, initValue = 0) => Array(length).fill(initValue);
+const newArray = (length, initValue = 0) => {
+    if (typeof initValue === 'function') {
+        const arr = [];
+        for (let i = 0; i < length; i++) {
+            arr.push(initValue());
+        }
+        return arr;
+    }
+    return Array(length).fill(initValue);
+};
 
 const isNumber = (chr) => typeof chr === 'number' || (chr >= '0' && chr <= '9');
 
@@ -50,6 +59,8 @@ const gcd = (x, y) => (!y ? x : gcd(y, x % y));
 
 const _lcm = (x, y) => (x * y) / gcd(x, y);
 const lcm = (values) => values.reduce((a, b) => _lcm(a, b), 1);
+
+const manhattan = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => Math.abs(x1 - x2) + Math.abs(y1 - y2);
 
 const time = (fn) => {
     const start = Date.now();
