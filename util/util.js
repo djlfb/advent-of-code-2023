@@ -1,6 +1,6 @@
 const { readFileSync } = require('fs');
 
-const readLines = (map = (line) => line, path = './input.txt', filterBlank = true) => {
+const readLines = (map = (line) => line, path = './input.txt') => {
     const file = readFileSync(path);
     return file
         .toString()
@@ -21,6 +21,8 @@ const newArray = (length, initValue = 0) => {
     }
     return Array(length).fill(initValue);
 };
+
+const inBounds = (arr, x, y) => x >= 0 && y >= 0 && x < arr[0].length && y < arr.length;
 
 const isNumber = (chr) => typeof chr === 'number' || (chr >= '0' && chr <= '9');
 
@@ -62,21 +64,16 @@ const lcm = (values) => values.reduce((a, b) => _lcm(a, b), 1);
 
 const manhattan = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => Math.abs(x1 - x2) + Math.abs(y1 - y2);
 
-const time = (fn) => {
-    const start = Date.now();
-    return [fn(), Date.now() - start];
-};
-
-const checkAndLog = (part, result, expected, timeTaken) => {
+const checkAndLog = (part, result, expected, startTimeMs) => {
     if (expected && result !== expected) {
         throw Error(`Expected ${expected} but result was ${result}`);
     }
-    console.log(`Part ${part}: ${result} - ${timeTaken}ms`);
+    console.log(`Part ${part}: ${result} - ${Date.now() - startTimeMs}ms`);
 };
 
 const report = (part, fn, expected) => {
-    const [result, timeTaken] = time(fn);
-    checkAndLog(part, result, expected, timeTaken);
+    const startTimeMs = Date.now();
+    checkAndLog(part, fn(), expected, startTimeMs);
 };
 
 const reportAll = (parts, timeTaken) =>
@@ -85,6 +82,7 @@ const reportAll = (parts, timeTaken) =>
 module.exports = {
     gcd,
     hasIntersection,
+    inBounds,
     intersection,
     isNumber,
     lcm,
@@ -97,5 +95,4 @@ module.exports = {
     report,
     reportAll,
     stringify,
-    time,
 };
