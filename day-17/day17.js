@@ -31,6 +31,13 @@ const allMoves = {
     ],
 };
 
+const coordKey = ({ x, y }) => stringify({ x, y });
+
+const dirKey = ({ dir, dirCount }) => stringify({ dir, dirCount });
+
+const invalidEnd = (grid, { x, y, dirCount }, minInDir) =>
+    dirCount < (minInDir ?? 0) && x === grid[0].length - 1 && y === grid.length - 1;
+
 const getPotentialAdjacent = ({ x, y, dir, dirCount }, maxInDir, minInDir) => {
     const moves = dir
         ? allMoves[dir]({ x, y })
@@ -52,12 +59,12 @@ const shortestPath = (grid, maxInDir, minInDir = null) => {
     queue.enqueue({ x: 0, y: 0, distance: 0, dir: null, dirCount: 0 });
     while (!queue.isEmpty()) {
         const currentNode = queue.dequeue();
-        const coordsKey = stringify({ x: currentNode.x, y: currentNode.y });
-        const visitedVariantKey = stringify({
-            dir: currentNode.dir,
-            dirCount: currentNode.dirCount,
-        });
-        if (visited.get(coordsKey)?.has(visitedVariantKey)) {
+        const coordsKey = coordKey(currentNode);
+        const visitedVariantKey = dirKey(currentNode);
+        if (
+            visited.get(coordsKey)?.has(visitedVariantKey) ||
+            invalidEnd(grid, currentNode, minInDir)
+        ) {
             continue;
         }
         const visitedVariants = visited.get(coordsKey) ?? new Map();
@@ -70,13 +77,8 @@ const shortestPath = (grid, maxInDir, minInDir = null) => {
             queue.enqueue({ x, y, distance, dir, dirCount });
         }
     }
-    const endCoordKey = stringify({ x: grid[0].length - 1, y: grid.length - 1 });
-    return Math.min(
-        ...Array.from(visited.get(endCoordKey).entries())
-            .filter(([key]) => !minInDir || JSON.parse(key).dirCount >= minInDir)
-            .map(([_, value]) => value)
-            .flat(),
-    );
+    const endCoordKey = coordKey({ x: grid[0].length - 1, y: grid.length - 1 });
+    return Math.min(...Array.from(visited.get(endCoordKey).values()));
 };
 
 const grid = readLines((line) => line.split(''));
